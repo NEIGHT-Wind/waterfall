@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>waterfall</title>
+	<style type="text/css">
+	*{
+		margin: 0px;
+		padding: 0px;
+		list-style: none;
+	}
+	body{
+		background-color: gray;
+	}
+	.body{
+		width: 1240px;
+		margin: 0 auto;
+	}
+	.body ul{
+		width: 310px;
+		float: left;
+	}
+	.body ul li{
+		padding: 10px 5px 0 5px;
+	}
+	.body ul li img{
+		width: 300px;
+		border: 1px solid black;
+	}
+	.body ul li span{
+		display: block;
+		width: 300px;
+		height: 50px;
+		line-height: 50px;
+		font-size: 20px;
+		text-align: center;
+		background-color: #fff;
+	}
+	</style>
+</head>
+<body>
+	<div class="body">
+		<ul class="one"></ul>
+		<ul class="two"></ul>
+		<ul class="thr"></ul>
+		<ul class="fou"></ul>
+	</div>
+	<script src="tool.js"></script>
+	<script type="text/javascript">
+	var count = 0,
+		oUl = document.getElementsByTagName('ul'),
+		boolen = true;
+	Ajax('GET', 'getPics.php', true, 'cpage=' + count, callback);
+	function callback (pics) {
+		var arr = JSON.parse(pics),
+			len = arr.length;
+		for(var i = 0; i < len; i ++) {
+			var li = document.createElement('li'),
+				img = document.createElement('img');
+			li.appendChild(img);
+			img.style.height = (300 / arr[i].width) * arr[i].height + 'px';
+			img.src = arr[i].image;
+			var fir = oUl[0].offsetHeight,
+				sec = oUl[1].offsetHeight,
+				thi = oUl[2].offsetHeight,
+				fou = oUl[3].offsetHeight,
+				min = Math.min(fir, sec, thi, fou);
+			if (min == fir) {
+				oUl[0].appendChild(li);
+			}else if(min == sec) {
+				oUl[1].appendChild(li);
+			}else if(min == thi) {
+				oUl[2].appendChild(li);
+			}else if(min == fou) {
+				oUl[3].appendChild(li);
+			}
+		}
+	}
+	document.onscroll = function() {
+		if (oUl[0].offsetHeight - window.pageYOffset <= 700) {
+			count ++;
+			if(boolen){
+				Ajax('GET', 'getPics.php', true, 'cpage=' + count, callback);
+				boolen = false;
+			}
+		}else{
+			boolen = true;
+		}
+	}
+
+
+
+
+
+
+
+	</script>
+
+</body>
+</html>
